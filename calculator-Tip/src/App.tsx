@@ -7,6 +7,7 @@ function App() {
   const [bill, setBill] = useState(0);
   const [numberOfPeople, setNumberOfPeople] = useState(0);
   const [tipPercentage, setTipPercentage] = useState(0);
+  const [custom, setCustom] = useState('');
 
   const handleBillChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBill(e.target.valueAsNumber);
@@ -16,13 +17,20 @@ function App() {
     setNumberOfPeople(e.target.valueAsNumber);
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTipPercentage(0);
+    setCustom(e.target.value);
+  };
+
   const handleTipClick = (value: number) => {
     setTipPercentage(value);
   };
 
   const calculateTipAmount = () => {
-    if (bill <= 0 || tipPercentage <= 0) return 0;
-    const tipAmount = (bill * tipPercentage) / 100;
+    if (bill <= 0) return 0;
+    const percentage = custom ? parseFloat(custom) : tipPercentage;
+    if (percentage <= 0 || isNaN(percentage)) return 0;
+    const tipAmount = (bill * percentage) / 100;
     return isNaN(tipAmount) || !isFinite(tipAmount) ? 0 : tipAmount;
   };
 
@@ -36,6 +44,7 @@ function App() {
     setBill(0);
     setNumberOfPeople(0);
     setTipPercentage(0);
+    setCustom('');
   };
 
   const tipAmount = calculateTipAmount();
@@ -95,12 +104,19 @@ function App() {
                   >
                     50%
                   </Button>
-                  <Button
+                  {/* <Button
                     className='bg-Very-lightgrayishcyan md:px-[0.9rem] px-[2.5rem] py-2 text-very-DarkCyan font-bold'
                     onClick={() => handleTipClick(0)}
                   >
                     Custom
-                  </Button>
+                  </Button> */}
+                  <input
+                    type='number'
+                    placeholder='custom'
+                    className='bg-Very-lightgrayishcyan md:px-[0.4rem] text-center px-[2.5rem] py-2 text-very-DarkCyan font-bold rounded-md font-spaceMono md:w-[87px] w-[136px]'
+                    value={custom}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
 
